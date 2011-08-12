@@ -180,8 +180,10 @@ class Mimer(object):
         different than a submitted form - application/x-www-form-urlencoded
         """
         type_formencoded = "application/x-www-form-urlencoded"
-
-        ctype = self.request.META.get('CONTENT_TYPE', type_formencoded)
+        
+        # Patched 12/8/11 by steve@torchbox.com in line with comments here
+        # https://bitbucket.org/jespern/django-piston/issue/87/split-charset-encoding-form-content-type
+        ctype = self.request.META.get('CONTENT_TYPE', type_formencoded).split(";")[0]
         
         if ctype == type_formencoded:
             return None
