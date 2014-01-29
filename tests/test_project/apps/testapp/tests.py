@@ -1,11 +1,12 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
-from django.utils import simplejson
 from django.conf import settings
 
 from piston import oauth
 from piston.models import Consumer, Token
 from piston.forms import OAuthAuthenticationForm
+
+import json
 
 try:
     import yaml
@@ -171,7 +172,7 @@ class IncomingExpressiveTests(MainTests):
         e2.save()
 
     def test_incoming_json(self):
-        outgoing = simplejson.dumps({ 'title': 'test', 'content': 'test',
+        outgoing = json.dumps({ 'title': 'test', 'content': 'test',
                                       'comments': [ { 'content': 'test1' },
                                                     { 'content': 'test2' } ] })
     
@@ -339,11 +340,11 @@ class ValidationTest(MainTests):
         data = {'msg': 'donuts!'}
         resp = self.client.get('/api/echo', data)
         self.assertEquals(resp.status_code, 200)
-        self.assertEquals(data, simplejson.loads(resp.content))
+        self.assertEquals(data, json.loads(resp.content))
 
 class PlainOldObject(MainTests):
     def test_plain_object_serialization(self):
         resp = self.client.get('/api/popo')
         self.assertEquals(resp.status_code, 200)
-        self.assertEquals({'type': 'plain', 'field': 'a field'}, simplejson.loads(resp.content))
+        self.assertEquals({'type': 'plain', 'field': 'a field'}, json.loads(resp.content))
         
